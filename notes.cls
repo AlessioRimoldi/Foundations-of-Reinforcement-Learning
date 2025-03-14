@@ -19,6 +19,10 @@
 \RequirePackage{hyperref}
 \RequirePackage{cite}
 \RequirePackage[acronym]{glossaries}
+\RequirePackage{tabulary}
+\RequirePackage{tcolorbox}
+\RequirePackage{algorithm}
+\RequirePackage{algorithmic} 
 
 %========== Listo of Acronyms ==========
 \newacronym{rl}{RL}{Reinforcement Learning}
@@ -32,3 +36,26 @@
 \def\eblue{\protect\normalcolor}
 \def\bred{\color{red}}
 \def\ered{\protect\normalcolor}
+
+\newcommand{\St}{\mathcal{S}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\V}{V^\pi(s)}
+\newcommand{\Q}{Q^\pi(s,a)}
+\newcommand{\Vstar}{V^*(s)}
+\newcommand{\Qstar}{Q^*(s,a)}
+\newcommand{\pistar}{\pi^*}
+\newcommand{\T}{\mathca{T}}
+
+
+% ========== Environments ==========
+
+\newtcolorbox{mybox}[2]{
+    arc=0mm,
+    title=#1,
+    colback=#2!10,
+    colframe=#2!10,
+    coltitle=#2!50!black,
+    colbacktitle=#2!30,
+    fonttitle=\bfseries,
+}

@@ -1,0 +1,88 @@
+\chapter{Value-Based Methods}\label{chap:value-based-methods}
+ 
+\begin{mybox}{Fundamental Challenge 1}{red}
+The dynamic programming approaches, Value Iteration and Policy Iteration, and the Linear Programming approach all
+require full knowledge of the model transition probabilities $P$ and the reward function $r$. \\
+
+\textbf{Solution: } Learning
+\end{mybox}
+
+\begin{mybox}{Fundamental Challenge 2}{red}
+The computation and memory cost can be very expensive for large scale \gls{mdp} problems. \\
+\textbf{Solution: } Representation = Function Approximation
+\end{mybox}
+
+\subsection{Function Approximation Methods}
+\begin{itemize}
+    \item \textbf{Linear Function Approximation}
+        \begin{itemize}
+            \item Linear combination of basis functions
+            \item reproducing kernel Hilbert space
+            \item Neural tangent kernel
+        \end{itemize}
+    \item \textbf{Non-Linear Function Approximation}
+        \begin{itemize}
+            \item Fully connected Neural Networks
+            \item Convolutional Neural Networks
+            \item Recurrent Neural Networks
+            \item Self attention
+            \item Generative Adversarial Networks
+        \end{itemize}
+\end{itemize}
+
+\subsection{Model-free Prediction}
+
+Given a policy $\pi: \St \rightarrow \Delta(\A)$, estimate $\V$ pr $\Q$ from episodes of experience unde $\pi$.
+\begin{equation*}
+    \V := \E\Bigg[\sum_{t=0}^\infty\gamma^tr(s,a)|s_0=s\Bigg] 
+\end{equation*}
+We also know from the Bellman consistency equation that 
+\begin{equation*}
+    \V = \E_{a\sim\pi(\cdot | s)}\Big[\sum_{t=0}^\infty\gamma^tr(s_t,a_t)|s_0=s,\pi\Big]
+\end{equation*}
+
+
+\section{Monte Carlo Method}
+\textbf{Idea: }Estimate $\V$ by the average of returns following all the visits to $s$.
+
+\begin{mybox}{Monte Carlo Method}{green}
+    \begin{algorithmic}[1]
+        \STATE \textbf{for} each episode \textbf{do}
+        \STATE \hspace{0.5cm} Generate an episode $\{s_0,a_0,r_0,s_1,\dots\}$ following $\pi$
+        \STATE \hspace{0.5cm} \textbf{for} each state $s_t$ \textbf{do}
+        \STATE \hspace{1cm} Compute return $G_t = r_{t+1} + \gamma r_{t+2}+ \dots$
+        \STATE \hspace{1cm} Update counter $n_t(s_t)\leftarrow n_t(s_t)+1$
+        \STATE \hspace{1cm} Update $V(s_t)\leftarrow V(s_t) + \frac{1}{n_t}(G_t-V(s_t))$
+        \STATE \hspace{0.5cm} \textbf{end for}
+        \STATE \textbf{end for}
+    \end{algorithmic}
+\end{mybox}
+
+\begin{itemize}
+    \item Value estimates are \textbf{independent} and do not build on the ones of other states. (\textbf{no bootstrap})
+    \item Learning can be slow when the episodes are long.
+    \item \textbf{Convergence: }\gls{mc} converges to $\V^pi$ as $n_t(s_t) \rightarrow \infty$.
+\end{itemize}
+
+\section{Temporal Difference Learning}
+\textbf{Idea: }Incrementally estimate $\V$ by the intermediate returns plus estimated return at the next state
+\begin{equation*}
+V(s_t) \leftarrow V(s_t) +\alpha_t(r_{t+1}+\gamma V(s_{t+1})-V(s_t))\\
+r_{t+1}+\gamma V(s_{t+1})-V(s_t) = \delta_t \ \ \text{Is the TD error} 
+\end{equation*}
+
+\begin{mybox}{TD Learning / TD(0)}{green}
+\begin{algorithmic}[1]
+\STATE \textbf{for} each step \textbf{do}
+\STATE \hspace{0.5cm} Observe $(s_t,a_t,r_t,s_{t+1})$
+\STATE \hspace{0.5cm} Update $V(s_t) \leftarrow V(s_t) +\alpha_t(r_{t+1}+\gamma V(s_{t+1})-V(s_t))$
+\STATE \textbf{end for}
+\end{algorithmic}
+\end{mybox}
+
+\begin{itemize}
+\item Similar to \gls{dp}: the estimates build on estimates of the other state (\textbf{bootstrap})
+\item Similar to \gls{mc}: learn directly from episodes of the experience without knowledge of \gls{mdp}.
+\item Unlike \gls{mc}, can learn from incomplete episodes, applicable to non-terminating environment.
+\item \textbf{Convergence: }$V \rightarrow V^\pi$ if each state is visited infinitely often and $\alpha_t\rightarrow 0$ at a suitable rate. 
+\end{itemize}
